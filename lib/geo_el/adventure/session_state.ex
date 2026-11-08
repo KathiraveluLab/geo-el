@@ -23,6 +23,7 @@ defmodule GeoEl.Adventure.SessionState do
   ]
   defstruct [
     :session_id,
+    :player_name,
     :camera,
     :radius,
     :waypoints,
@@ -52,6 +53,7 @@ defmodule GeoEl.Adventure.SessionState do
 
   @type t :: %__MODULE__{
           session_id: String.t(),
+          player_name: String.t() | nil,
           camera: Coord.t(),
           radius: float(),
           waypoints: [Waypoint.t()],

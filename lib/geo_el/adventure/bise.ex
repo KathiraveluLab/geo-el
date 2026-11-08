@@ -7,6 +7,29 @@ defmodule GeoEl.Adventure.BISE do
   alias GeoEl.Globe.Coord
 
   @max_rotation_delta_deg 45.0
+  @max_player_name_length 40
+
+  @doc """
+  Sanitizes a player's explorer name by removing control characters, normalizing whitespace,
+  and bounding length to `[1, 40]` graphemes. Defaults to `"Anonymous Explorer"` when blank.
+  """
+  @spec sanitize_player_name(term()) :: String.t()
+  def sanitize_player_name(name) when is_binary(name) do
+    cleaned =
+      name
+      |> String.replace(~r/[\x00-\x1F\x7F]+/u, " ")
+      |> String.replace(~r/\s+/u, " ")
+      |> String.trim()
+      |> String.slice(0, @max_player_name_length)
+
+    if cleaned == "" do
+      "Anonymous Explorer"
+    else
+      cleaned
+    end
+  end
+
+  def sanitize_player_name(_), do: "Anonymous Explorer"
 
   @doc """
   Clamps a normalized radial offset ratio `rho / R` into the closed interval `[0.0, 1.0]`.

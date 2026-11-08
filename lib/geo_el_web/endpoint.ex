@@ -13,6 +13,18 @@ defmodule GeoElWeb.Endpoint do
     longpoll: [connect_info: [session: @session_options]]
 
   plug Plug.Static,
+    at: "/assets/vendor",
+    from: {:phoenix, "priv/static"},
+    gzip: false,
+    only: ~w(phoenix.min.js phoenix.js)
+
+  plug Plug.Static,
+    at: "/assets/vendor",
+    from: {:phoenix_live_view, "priv/static"},
+    gzip: false,
+    only: ~w(phoenix_live_view.min.js phoenix_live_view.js)
+
+  plug Plug.Static,
     at: "/",
     from: :geo_el,
     gzip: false,

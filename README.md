@@ -2,6 +2,8 @@
 
 This is a geography game written in Elixir using Phoenix LiveView and Open Telecom Platform (OTP) supervision trees.
 
+![Geo-El Gameplay Screenshot](docs/screenshot.png)
+
 ## How to Play
 
 ### Objective
@@ -36,16 +38,21 @@ You are navigating a six-stage global cartographic expedition across Earth (`Roy
      - **Fuel Consumption:** Distance errors burn expedition fuel (`distance_km / 450`, capped at `30%` per leg).
      - **Adaptive Clue Routing (`A2`):** High accuracy ($S_k \ge 0.75$) starts your next waypoint at **Tier 1** for maximum points; larger distance errors automatically start the next waypoint at **Tier 2** or **Tier 3** to assist your navigation.
 
-5. **Complete or Reset the Expedition:**
+5. **Record Your Player Name and Score (`Player Identity & Record Score`):**
+   - Enter your name in the **Player Name** input field inside the **Player Identity & Record Score** card in the right panel and click **Save Score to Leaderboard**.
+   - Your name, score, completed waypoints, remaining fuel, and UTC timestamp are saved persistently to disk (`priv/data/leaderboard.json`) via `GeoEl.Adventure.ScoreStore` and displayed in the **Previous Scores (Persistent Storage)** leaderboard across sessions and server restarts.
+
+6. **Complete or Reset the Expedition:**
    - The expedition ends when all 6 waypoints are completed or if fuel reaches `0%`. Click **Reset Expedition** (or **Start New Expedition**) at any time to start a fresh run.
 
 ## Architecture Overview
 
 - **Orthographic Spherical Projection (`GeoEl.Globe.Projection` and `GeoEl.Globe.Math`):** Performs server-side forward and inverse orthographic projections between spherical Earth coordinates $(\phi, \lambda)$ and two-dimensional Scalable Vector Graphics (SVG) viewport coordinates $(x, y)$, alongside Haversine great-circle distance and geodesic arc interpolation.
-- **Bounded Input State Enforcement (`GeoEl.Adventure.BISE`):** Enforces radial domain clamping ($\hat{u} \in [0.0, 1.0]$) during inverse trigonometric projection, sanitizes viewport rotation deltas, and verifies closed cartographic polygon rings at startup.
+- **Bounded Input State Enforcement (`GeoEl.Adventure.BISE`):** Enforces radial domain clamping ($\hat{u} \in [0.0, 1.0]$) during inverse trigonometric projection, sanitizes viewport rotation deltas and player identity strings, and verifies closed cartographic polygon rings at startup.
 - **Adaptive Calibration (`GeoEl.Adventure.Calibration`):** Implements the `SkewPNN` skewed exponential kernel and `A2` adaptive clue routing controller with foreshortening compensation and $95\%$ confidence interval tracking.
 - **Supervised Adventure Sessions (`GeoEl.Adventure.SessionServer`):** Isolates each active explorer session inside a supervised `GenServer` worker under a `DynamicSupervisor` (`GeoEl.Adventure.Supervisor`) and broadcasts completed expedition legs over `Phoenix.PubSub`.
-- **Interactive Light-Themed Viewport (`GeoElWeb.GlobeLive`):** Renders a high-contrast light-themed SVG globe with colocated pointer drag and coordinate picking hooks.
+- **Persistent Score Storage (`GeoEl.Adventure.ScoreStore`):** Supervised `GenServer` that persists sanitized player names and expedition scores to a JSON store (`priv/data/leaderboard.json`) and broadcasts real-time leaderboard updates over `Phoenix.PubSub`.
+- **Interactive Light-Themed Viewport (`GeoElWeb.GlobeLive`):** Renders a high-contrast light-themed two-panel SVG globe interface with pointer drag and coordinate picking hooks.
 
 ## Automated Prerequisite and Project Setup
 

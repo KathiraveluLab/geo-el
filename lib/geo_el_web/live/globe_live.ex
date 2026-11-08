@@ -7,6 +7,7 @@ defmodule GeoElWeb.GlobeLive do
   use GeoElWeb, :live_view
 
   alias GeoEl.Adventure.Calibration
+  alias GeoEl.Adventure.ScoreStore
   alias GeoEl.Adventure.SessionServer
   alias GeoEl.Adventure.SessionState
   alias GeoEl.Globe.Coord
@@ -27,6 +28,7 @@ defmodule GeoElWeb.GlobeLive do
     end
 
     state = SessionServer.get_state(server_pid)
+    leaderboard = ScoreStore.list_scores()
 
     socket =
       socket
@@ -35,6 +37,9 @@ defmodule GeoElWeb.GlobeLive do
       |> assign(:svg_size, @svg_size)
       |> assign(:svg_center, @svg_center)
       |> assign(:coord_form, to_form(%{"lat" => "0.0", "lon" => "0.0"}, as: :guess))
+      |> assign(:player_form, to_form(%{"player_name" => state.player_name || ""}, as: :player))
+      |> assign(:leaderboard_entries, leaderboard)
+      |> assign(:score_saved_notice, nil)
       |> assign(:legs_empty?, state.completed_legs == [])
       |> stream(:expedition_log, state.completed_legs, reset: true)
       |> assign_session_projection(state)
@@ -107,7 +112,33 @@ defmodule GeoElWeb.GlobeLive do
     socket =
       socket
       |> assign(:legs_empty?, true)
+      |> assign(:score_saved_notice, nil)
       |> stream(:expedition_log, [], reset: true)
+      |> assign_session_projection(state)
+
+    {:noreply, socket}
+  end
+
+  @impl true
+  def handle_event("save_score", %{"player" => %{"player_name" => raw_name}}, socket) do
+    state = SessionServer.set_player_name(socket.assigns.server_pid, raw_name)
+
+    {:ok, entry, entries} =
+      ScoreStore.record_score(
+        state.player_name || raw_name,
+        state.total_score,
+        length(state.completed_legs),
+        state.fuel
+      )
+
+    socket =
+      socket
+      |> assign(:player_form, to_form(%{"player_name" => entry.player_name}, as: :player))
+      |> assign(:leaderboard_entries, entries)
+      |> assign(
+        :score_saved_notice,
+        "Saved score for #{entry.player_name}: #{entry.score} pts."
+      )
       |> assign_session_projection(state)
 
     {:noreply, socket}
@@ -123,6 +154,11 @@ defmodule GeoElWeb.GlobeLive do
       end
 
     {:noreply, socket}
+  end
+
+  @impl true
+  def handle_info({:leaderboard_updated, entries}, socket) do
+    {:noreply, assign(socket, :leaderboard_entries, entries)}
   end
 
   @impl true
@@ -161,7 +197,7 @@ defmodule GeoElWeb.GlobeLive do
           <div class="mb-3 flex w-full items-center justify-between border-b border-slate-100 pb-2">
             <div>
               <h1 class="text-base font-bold text-slate-900">
-                Orthographic Spherical Viewport
+                Left Panel: Orthographic Spherical Viewport
               </h1>
               <p id="camera-telemetry" class="text-xs text-slate-600">
                 Camera Center: {Float.round(@session_state.camera.lat, 1)} deg Lat, {Float.round(
@@ -208,7 +244,7 @@ defmodule GeoElWeb.GlobeLive do
 
           <div
             id="globe-interaction-layer"
-            phx-hook=".GlobeDrag"
+            phx-hook="GlobeDrag"
             data-center-x={@svg_center}
             data-center-y={@svg_center}
             class="cursor-crosshair select-none"
@@ -315,58 +351,6 @@ defmodule GeoElWeb.GlobeLive do
               Drag to rotate | Click globe to guess
             </div>
           </div>
-
-          <script :type={Phoenix.LiveView.ColocatedHook} name=".GlobeDrag">
-            export default {
-              mounted() {
-                this.dragging = false;
-                this.moved = false;
-                this.startX = 0;
-                this.startY = 0;
-
-                const svg = this.el.querySelector("svg");
-                const centerX = parseFloat(this.el.dataset.centerX || "250");
-                const centerY = parseFloat(this.el.dataset.centerY || "250");
-
-                svg.addEventListener("pointerdown", (e) => {
-                  this.dragging = true;
-                  this.moved = false;
-                  this.startX = e.clientX;
-                  this.startY = e.clientY;
-                });
-
-                window.addEventListener("pointermove", (e) => {
-                  if (!this.dragging) return;
-                  const dx = e.clientX - this.startX;
-                  const dy = e.clientY - this.startY;
-                  if (Math.abs(dx) > 12 || Math.abs(dy) > 12) {
-                    this.moved = true;
-                    this.startX = e.clientX;
-                    this.startY = e.clientY;
-                    this.pushEvent("rotate_camera", {
-                      dlat: (dy * 0.35).toFixed(2),
-                      dlon: (-dx * 0.35).toFixed(2)
-                    });
-                  }
-                });
-
-                window.addEventListener("pointerup", () => {
-                  this.dragging = false;
-                });
-
-                svg.addEventListener("click", (e) => {
-                  if (this.moved) return;
-                  const rect = svg.getBoundingClientRect();
-                  const clickX = e.clientX - rect.left - centerX;
-                  const clickY = e.clientY - rect.top - centerY;
-                  this.pushEvent("globe_click", {
-                    offset_x: clickX.toFixed(2),
-                    offset_y: clickY.toFixed(2)
-                  });
-                });
-              }
-            }
-          </script>
         </div>
 
         <div id="expedition-hud" class="lg:col-span-5 flex flex-col gap-5">
@@ -374,7 +358,7 @@ defmodule GeoElWeb.GlobeLive do
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
               <div>
                 <h2 class="text-sm font-bold uppercase tracking-wider text-slate-800">
-                  Expedition Status
+                  Right Panel: Expedition Status & Clues
                 </h2>
                 <p id="expedition-step-counter" class="text-xs text-slate-600">
                   Waypoint {min(@session_state.current_index + 1, length(@session_state.waypoints))} of {length(
@@ -477,6 +461,68 @@ defmodule GeoElWeb.GlobeLive do
                     Start New Expedition
                   </.button>
                 </div>
+              </div>
+            <% end %>
+          </div>
+
+          <div class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs">
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 mb-3">
+              Player Identity & Record Score
+            </h3>
+            <.form
+              for={@player_form}
+              id="save-score-form"
+              phx-submit="save_score"
+              class="space-y-3"
+            >
+              <.input
+                field={@player_form[:player_name]}
+                id="player-name-input"
+                label="Player Name"
+                placeholder="Enter your explorer name"
+                type="text"
+              />
+              <.button id="save-score-btn" type="submit" class="w-full">
+                Save Score to Leaderboard ({@session_state.total_score} pts)
+              </.button>
+            </.form>
+            <%= if @score_saved_notice do %>
+              <p
+                id="score-saved-notice"
+                class="mt-2 rounded-md border border-blue-200 bg-blue-50 p-2 text-xs font-medium text-blue-900"
+              >
+                {@score_saved_notice}
+              </p>
+            <% end %>
+          </div>
+
+          <div
+            id="leaderboard-card"
+            class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs"
+          >
+            <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 mb-2">
+              Previous Scores (Persistent Storage)
+            </h3>
+            <%= if @leaderboard_entries == [] do %>
+              <p id="leaderboard-empty" class="text-xs text-slate-500">
+                No previous scores recorded yet. Enter your name above and click Save Score.
+              </p>
+            <% else %>
+              <div id="leaderboard-list" class="space-y-2">
+                <%= for {entry, idx} <- Enum.with_index(@leaderboard_entries, 1) do %>
+                  <div
+                    id={entry.id}
+                    class="flex items-center justify-between rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-xs text-slate-800"
+                  >
+                    <div>
+                      <span class="font-bold text-slate-900">#{idx} {entry.player_name}</span>
+                      <span class="text-slate-600">
+                        ({entry.waypoints_completed}/6 legs, {entry.fuel_remaining}% fuel)
+                      </span>
+                    </div>
+                    <span class="font-bold text-blue-900">{entry.score} pts</span>
+                  </div>
+                <% end %>
               </div>
             <% end %>
           </div>

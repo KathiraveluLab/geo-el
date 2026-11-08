@@ -15,6 +15,7 @@ defmodule GeoEl.Application do
       {Phoenix.PubSub, name: GeoEl.PubSub},
       {Registry, keys: :unique, name: GeoEl.Adventure.Registry},
       {DynamicSupervisor, name: GeoEl.Adventure.Supervisor, strategy: :one_for_one},
+      GeoEl.Adventure.ScoreStore,
       GeoElWeb.Endpoint
     ]
 

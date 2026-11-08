@@ -35,6 +35,24 @@ defmodule GeoElWeb.GlobeLiveTest do
       assert has_element?(view, "#last-turn-feedback")
       assert has_element?(view, "#expedition-log")
       refute has_element?(view, "#expedition-log-empty")
+
+      assert has_element?(view, "#save-score-form")
+      assert has_element?(view, "#leaderboard-card")
+
+      view
+      |> form("#save-score-form", player: %{player_name: "Captain Nemo"})
+      |> render_submit()
+
+      assert has_element?(view, "#score-saved-notice")
+      assert has_element?(view, "#leaderboard-list")
+      assert render(view) =~ "Captain Nemo"
+    end
+
+    test "serves static CSS and LiveView JS assets with HTTP 200", %{conn: conn} do
+      assert get(conn, "/assets/app.css").status == 200
+      assert get(conn, "/assets/app.js").status == 200
+      assert get(conn, "/assets/vendor/phoenix.min.js").status == 200
+      assert get(conn, "/assets/vendor/phoenix_live_view.min.js").status == 200
     end
   end
 end

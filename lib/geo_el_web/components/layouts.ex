@@ -15,6 +15,20 @@ defmodule GeoElWeb.Layouts do
         <meta name="csrf-token" content={get_csrf_token()} />
         <title>Geo-El Spherical Adventure</title>
         <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+        <script
+          defer
+          phx-track-static
+          type="text/javascript"
+          src={~p"/assets/vendor/phoenix.min.js"}
+        >
+        </script>
+        <script
+          defer
+          phx-track-static
+          type="text/javascript"
+          src={~p"/assets/vendor/phoenix_live_view.min.js"}
+        >
+        </script>
         <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
         </script>
       </head>

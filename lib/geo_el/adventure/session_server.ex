@@ -62,6 +62,11 @@ defmodule GeoEl.Adventure.SessionServer do
     GenServer.call(server, :reset_expedition)
   end
 
+  @spec set_player_name(GenServer.server(), String.t()) :: SessionState.t()
+  def set_player_name(server, player_name) do
+    GenServer.call(server, {:set_player_name, player_name})
+  end
+
   @spec pubsub_topic() :: String.t()
   def pubsub_topic, do: @pubsub_topic
 
@@ -130,13 +135,25 @@ defmodule GeoEl.Adventure.SessionServer do
 
   @impl true
   def handle_call(:reset_expedition, _from, %SessionState{} = state) do
-    reset_state = build_initial_state(state.session_id, state.radius)
+    reset_state = %{
+      build_initial_state(state.session_id, state.radius)
+      | player_name: state.player_name
+    }
+
     {:reply, reset_state, reset_state}
+  end
+
+  @impl true
+  def handle_call({:set_player_name, raw_name}, _from, %SessionState{} = state) do
+    sanitized = BISE.sanitize_player_name(raw_name)
+    next_state = %{state | player_name: sanitized}
+    {:reply, next_state, next_state}
   end
 
   defp build_initial_state(session_id, radius) do
     %SessionState{
       session_id: session_id,
+      player_name: nil,
       camera: Coord.new(20.0, 0.0),
       radius: radius,
       waypoints: WorldData.waypoints(),

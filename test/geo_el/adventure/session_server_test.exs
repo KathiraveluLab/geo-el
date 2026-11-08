@@ -1,6 +1,8 @@
 defmodule GeoEl.Adventure.SessionServerTest do
   use ExUnit.Case, async: true
 
+  alias GeoEl.Adventure.BISE
+  alias GeoEl.Adventure.ScoreStore
   alias GeoEl.Adventure.SessionServer
   alias GeoEl.Globe.Coord
 
@@ -38,6 +40,47 @@ defmodule GeoEl.Adventure.SessionServerTest do
       ref = Process.monitor(pid)
       GenServer.stop(pid, :normal)
       assert_receive {:DOWN, ^ref, :process, ^pid, :normal}
+    end
+
+    test "persists sanitized player names and scores to disk via ScoreStore" do
+      temp_path =
+        Path.join(
+          System.tmp_dir!(),
+          "geo_el_scores_#{System.unique_integer([:positive])}.json"
+        )
+
+      store_name = :"score_store_#{System.unique_integer([:positive])}"
+
+      store_pid =
+        start_supervised!({ScoreStore, [name: store_name, storage_path: temp_path]})
+
+      assert BISE.sanitize_player_name("   ") == "Anonymous Explorer"
+      assert BISE.sanitize_player_name("  Explorer\nOne  ") == "Explorer One"
+
+      {:ok, entry1, _all} = ScoreStore.record_score("Alice", 2400, 3, 92.5, store_pid)
+      {:ok, entry2, all} = ScoreStore.record_score("Bob", 4100, 5, 85.0, store_pid)
+
+      assert entry1.player_name == "Alice"
+      assert entry2.player_name == "Bob"
+      assert Enum.map(all, & &1.player_name) == ["Bob", "Alice"]
+      assert File.exists?(temp_path)
+
+      reloaded_name = :"score_store_reloaded_#{System.unique_integer([:positive])}"
+
+      reloaded_pid =
+        start_supervised!(
+          {ScoreStore, [name: reloaded_name, storage_path: temp_path]},
+          id: :reloaded_store
+        )
+
+      reloaded_scores = ScoreStore.list_scores(reloaded_pid)
+
+      assert Enum.map(reloaded_scores, &{&1.player_name, &1.score}) == [
+               {"Bob", 4100},
+               {"Alice", 2400}
+             ]
+
+      File.rm(temp_path)
     end
   end
 end
