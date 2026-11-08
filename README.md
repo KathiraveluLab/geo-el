@@ -10,16 +10,38 @@ This is a geography game written in Elixir using Phoenix LiveView and Open Telec
 - **Supervised Adventure Sessions (`GeoEl.Adventure.SessionServer`):** Isolates each active explorer session inside a supervised `GenServer` worker under a `DynamicSupervisor` (`GeoEl.Adventure.Supervisor`) and broadcasts completed expedition legs over `Phoenix.PubSub`.
 - **Interactive Light-Themed Viewport (`GeoElWeb.GlobeLive`):** Renders a high-contrast light-themed SVG globe with colocated pointer drag and coordinate picking hooks.
 
-## Development and Verification
+## Automated Prerequisite and Project Setup
 
-To install dependencies, compile, and run the verification suite:
+Instead of installing Erlang/OTP, Elixir, Hex, Rebar, and Mix dependencies manually, use the provided bootstrap scripts for Windows or Linux.
+
+### Windows (`setup.bat`)
+
+Run the Windows batch script from Command Prompt or PowerShell (run as Administrator if Erlang/OTP and Elixir are not yet installed):
+
+```powershell
+.\setup.bat
+```
+
+The `setup.bat` script checks for Erlang/OTP and Elixir, installs missing runtimes via `winget` (with fallback to Chocolatey), updates the current session `PATH`, initializes `Hex` and `Rebar`, and executes `mix setup`.
+
+### Linux (`setup.sh`)
+
+Run the Linux shell script to install Erlang/OTP, Elixir, and build tools via the system package manager (`apt-get`, `dnf`, `pacman`, `apk`, or `zypper`), initialize `Hex` and `Rebar`, and execute `mix setup`:
 
 ```bash
-mix setup
+chmod +x setup.sh
+./setup.sh
+```
+
+## Development and Verification
+
+Once setup is complete, run the verification suite:
+
+```bash
 mix precommit
 ```
 
-To start the Phoenix web endpoint locally:
+To start the Phoenix web endpoint locally (accessible at `http://localhost:4000`):
 
 ```bash
 mix phx.server
