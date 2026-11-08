@@ -8,3 +8,15 @@ erl_crash.dump
 *.beam
 /config/*.secret.exs
 .elixir_ls/
+
+# Design artifacts
+_paper
+_bmad
+
+# AI Agent files
+.claude
+.codex
+.cursor
+.vscode
+.agent
+.gemini
