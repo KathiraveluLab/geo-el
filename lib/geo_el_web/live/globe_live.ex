@@ -129,6 +129,33 @@ defmodule GeoElWeb.GlobeLive do
   def render(assigns) do
     ~H"""
     <Layouts.app flash={@flash}>
+      <div
+        id="how-to-play-banner"
+        class="mb-6 rounded-xl border border-slate-200 bg-slate-50 p-4 text-slate-900 shadow-xs"
+      >
+        <h2 class="text-xs font-bold uppercase tracking-wider text-slate-800">
+          How to Play (6-Waypoint Global Expedition)
+        </h2>
+        <div class="mt-2 grid grid-cols-1 gap-3 text-xs text-slate-700 md:grid-cols-3">
+          <div class="rounded-lg border border-slate-200 bg-white p-2.5">
+            <span class="font-bold text-slate-900">1. Read the Active Clue:</span>
+            Check the clue in the right panel. Need help? Click
+            <span class="font-semibold">Unlock Next Clue Tier</span>
+            (costs 4% fuel; higher tiers reduce the point multiplier).
+          </div>
+          <div class="rounded-lg border border-slate-200 bg-white p-2.5">
+            <span class="font-bold text-slate-900">2. Rotate the Globe:</span>
+            Drag anywhere on the globe with your mouse or click the
+            <span class="font-semibold">West / North / South / East</span>
+            buttons to bring the target region into view.
+          </div>
+          <div class="rounded-lg border border-slate-200 bg-white p-2.5">
+            <span class="font-bold text-slate-900">3. Pinpoint the Target:</span>
+            Click directly on the globe (without dragging) to place your guess, or enter Latitude and Longitude in the form on the right.
+          </div>
+        </div>
+      </div>
+
       <div class="grid grid-cols-1 gap-8 lg:grid-cols-12 bg-white text-slate-900">
         <div class="lg:col-span-7 flex flex-col items-center rounded-xl border border-slate-200 bg-white p-6 shadow-xs">
           <div class="mb-3 flex w-full items-center justify-between border-b border-slate-100 pb-2">
@@ -268,6 +295,27 @@ defmodule GeoElWeb.GlobeLive do
             </svg>
           </div>
 
+          <div
+            id="globe-legend"
+            class="mt-4 flex flex-wrap items-center justify-center gap-4 border-t border-slate-100 pt-3 text-xs text-slate-700"
+          >
+            <div class="flex items-center gap-1.5">
+              <span class="inline-block h-3 w-3 rounded-full bg-red-700"></span>
+              <span>Red Pin: Your Guess</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="inline-block h-3 w-3 rounded-full bg-blue-700"></span>
+              <span>Blue Pin: Target Waypoint</span>
+            </div>
+            <div class="flex items-center gap-1.5">
+              <span class="inline-block h-0.5 w-4 bg-blue-700"></span>
+              <span>Blue Arc: Geodesic Path</span>
+            </div>
+            <div class="text-slate-500">
+              Drag to rotate | Click globe to guess
+            </div>
+          </div>
+
           <script :type={Phoenix.LiveView.ColocatedHook} name=".GlobeDrag">
             export default {
               mounted() {
@@ -344,11 +392,40 @@ defmodule GeoElWeb.GlobeLive do
               </div>
             </div>
 
+            <%= if @session_state.last_guess do %>
+              <div
+                id="last-turn-feedback"
+                class="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-3 text-xs text-slate-900"
+              >
+                <div class="flex items-center justify-between font-bold text-blue-950">
+                  <span>Last Turn Resolved: {@session_state.last_guess.waypoint_name}</span>
+                  <span>+{@session_state.last_guess.points_awarded} pts</span>
+                </div>
+                <div class="mt-1 text-slate-700">
+                  Your Guess: ({Float.round(@session_state.last_guess.guessed_coord.lat, 1)}, {Float.round(
+                    @session_state.last_guess.guessed_coord.lon,
+                    1
+                  )}) | Target: ({Float.round(@session_state.last_guess.target_coord.lat, 1)}, {Float.round(
+                    @session_state.last_guess.target_coord.lon,
+                    1
+                  )})
+                </div>
+                <div class="mt-0.5 font-medium text-blue-900">
+                  Great-Circle Distance Error: {@session_state.last_guess.distance_km} km
+                </div>
+              </div>
+            <% end %>
+
             <%= if @current_waypoint && @session_state.status == :in_progress do %>
               <div id="active-clue-panel" class="mt-4 space-y-3">
                 <div class="rounded-lg border border-slate-200 bg-slate-50 p-3">
-                  <div class="text-xs font-semibold text-blue-900">
-                    Active Clue (Tier {@session_state.clue_tier})
+                  <div class="flex items-center justify-between text-xs font-semibold text-blue-900">
+                    <span>Active Clue (Tier {@session_state.clue_tier})</span>
+                    <span>
+                      Current Waypoint {@session_state.current_index + 1} of {length(
+                        @session_state.waypoints
+                      )}
+                    </span>
                   </div>
                   <p id="tier1-clue-text" class="mt-1 text-sm text-slate-900">
                     {@current_waypoint.tier1_clue}
