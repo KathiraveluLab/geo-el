@@ -61,3 +61,4 @@ if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
 echo [geo-el] Setup completed. Run 'mix precommit' to verify or 'mix phx.server' to start the application.
 endlocal
+

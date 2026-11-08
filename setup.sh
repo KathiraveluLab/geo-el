@@ -40,3 +40,4 @@ echo "[geo-el] Fetching project dependencies via mix setup..."
 mix setup
 
 echo "[geo-el] Setup completed. Run 'mix precommit' to verify or 'mix phx.server' to start the application."
+
