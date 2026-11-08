@@ -1,19 +1,26 @@
 [
   {
-    "fuel_remaining": 96.2,
     "id": "score-seed-1",
     "player_name": "Aathi",
-    "recorded_at": "2026-11-08T18:00:00Z",
     "score": 5420,
-    "waypoints_completed": 6
+    "waypoints_completed": 6,
+    "fuel_remaining": 96.2,
+    "recorded_at": "2026-11-08T18:00:00Z"
   },
   {
-    "fuel_remaining": 88.5,
     "id": "score-seed-2",
     "player_name": "Deva",
-    "recorded_at": "2026-11-08T17:30:00Z",
     "score": 4890,
-    "waypoints_completed": 6
+    "waypoints_completed": 6,
+    "fuel_remaining": 88.5,
+    "recorded_at": "2026-11-08T17:30:00Z"
+  },
+  {
+    "id": "score-547",
+    "player_name": "Prad",
+    "score": 2497,
+    "waypoints_completed": 6,
+    "fuel_remaining": 70.2,
+    "recorded_at": "2026-11-08T22:36:36Z"
   }
 ]
-
