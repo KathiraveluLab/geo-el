@@ -8,7 +8,7 @@ This is a geography game written in Elixir using Phoenix LiveView and Open Telec
 
 ### Objective
 
-You are navigating a six-stage global cartographic expedition across Earth (`Royal Observatory Greenwich`, `Mitad del Mundo in Quito`, `Mid-Atlantic Rift at Thingvellir`, `Isthmus of Suez`, `Strait of Singapore`, and `Beagle Channel in Tierra del Fuego`). For each stage, read the geographic clue, rotate the 3D orthographic globe to locate the target region, and pinpoint the waypoint before your expedition fuel (`100%`) runs out.
+Each expedition draws a randomized sequence of 6 unique waypoints without replacement from a global catalog of 24 landmarks spanning all continents and latitude bands (such as `Royal Observatory Greenwich`, `Mitad del Mundo in Quito`, `Mount Kilimanjaro`, `Lake Baikal`, `Uluru Monolith`, `Spitsbergen Fjord in Svalbard`, `Strait of Hormuz`, and `Milford Sound in Fiordland`). Starting a new expedition excludes the previous run's waypoints first so consecutive runs do not repeat questions. For each stage, read the geographic clue, rotate the 3D orthographic globe to locate the target region, and pinpoint the waypoint before your expedition fuel (`100%`) runs out.
 
 ### Step-by-Step Gameplay
 

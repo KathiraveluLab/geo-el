@@ -135,8 +135,10 @@ defmodule GeoEl.Adventure.SessionServer do
 
   @impl true
   def handle_call(:reset_expedition, _from, %SessionState{} = state) do
+    previous_ids = Enum.map(state.waypoints, & &1.id)
+
     reset_state = %{
-      build_initial_state(state.session_id, state.radius)
+      build_initial_state(state.session_id, state.radius, previous_ids)
       | player_name: state.player_name
     }
 
@@ -150,13 +152,13 @@ defmodule GeoEl.Adventure.SessionServer do
     {:reply, next_state, next_state}
   end
 
-  defp build_initial_state(session_id, radius) do
+  defp build_initial_state(session_id, radius, exclude_ids \\ []) do
     %SessionState{
       session_id: session_id,
       player_name: nil,
       camera: Coord.new(20.0, 0.0),
       radius: radius,
-      waypoints: WorldData.waypoints(),
+      waypoints: WorldData.sample_expedition_waypoints(6, exclude_ids),
       current_index: 0,
       clue_tier: 1,
       fuel: @initial_fuel,

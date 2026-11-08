@@ -4,7 +4,6 @@ defmodule GeoEl.Adventure.SessionServerTest do
   alias GeoEl.Adventure.BISE
   alias GeoEl.Adventure.ScoreStore
   alias GeoEl.Adventure.SessionServer
-  alias GeoEl.Globe.Coord
 
   describe "supervised SessionServer lifecycle and state transitions" do
     test "isolates session state, clamps rotation deltas, and records waypoint guesses" do
@@ -29,13 +28,23 @@ defmodule GeoEl.Adventure.SessionServerTest do
       assert hinted_state.clue_tier == 2
       assert hinted_state.fuel < initial_state.fuel
 
+      first_wp = hd(initial_state.waypoints)
+
       {:ok, after_guess_state, leg_entry} =
-        SessionServer.submit_coord_guess(pid, Coord.new(51.4769, 0.0005))
+        SessionServer.submit_coord_guess(pid, first_wp.coord)
 
       _ = :sys.get_state(pid)
       assert after_guess_state.current_index == 1
       assert leg_entry.distance_km < 1.0
       assert after_guess_state.total_score > 0
+
+      reset_state = SessionServer.reset_expedition(pid)
+      _ = :sys.get_state(pid)
+      initial_ids = MapSet.new(Enum.map(initial_state.waypoints, & &1.id))
+      reset_ids = MapSet.new(Enum.map(reset_state.waypoints, & &1.id))
+      assert MapSet.size(initial_ids) == 6
+      assert MapSet.size(reset_ids) == 6
+      assert MapSet.disjoint?(initial_ids, reset_ids)
 
       ref = Process.monitor(pid)
       GenServer.stop(pid, :normal)
