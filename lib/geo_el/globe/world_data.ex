@@ -204,7 +204,7 @@ defmodule GeoEl.Globe.WorldData do
         region: "Western Europe",
         coord: Coord.new(51.4769, 0.0005),
         tier1_clue:
-          "Begin your calibration where the Prime Meridian divides the Eastern and Western hemispheres along a tidal river.",
+          "Locate the historic astronomical observatory where the Prime Meridian divides the Eastern and Western hemispheres along a tidal river.",
         tier2_clue:
           "Located in southeastern Great Britain on the southern bank of the River Thames.",
         tier3_clue: "Target telemetry: latitude 51.5 degrees North, longitude 0.0 degrees."
@@ -226,7 +226,7 @@ defmodule GeoEl.Globe.WorldData do
         region: "Subarctic North Atlantic",
         coord: Coord.new(64.2559, -21.1295),
         tier1_clue:
-          "Navigate northward to an island where the North American and Eurasian tectonic plates pull apart above the sea.",
+          "Locate the subarctic volcanic island where the North American and Eurasian tectonic plates pull apart above sea level.",
         tier2_clue:
           "Situated just south of the Arctic Circle in southwestern Iceland along a geothermal rift valley.",
         tier3_clue: "Target telemetry: latitude 64.3 degrees North, longitude 21.1 degrees West."
@@ -237,9 +237,9 @@ defmodule GeoEl.Globe.WorldData do
         region: "Northeast Africa and Sinai",
         coord: Coord.new(30.5852, 32.2654),
         tier1_clue:
-          "Cross to the narrow land bridge and artificial maritime corridor linking the Mediterranean Sea with the Red Sea.",
+          "Identify the narrow land bridge and artificial maritime corridor linking the Mediterranean Sea with the Red Sea.",
         tier2_clue:
-          "Separates the African continent from the Sinai Peninsula along an sea-level canal.",
+          "Separates the African continent from the Sinai Peninsula along a sea-level canal.",
         tier3_clue: "Target telemetry: latitude 30.6 degrees North, longitude 32.3 degrees East."
       },
       %Waypoint{
@@ -248,7 +248,7 @@ defmodule GeoEl.Globe.WorldData do
         region: "Maritime Southeast Asia",
         coord: Coord.new(1.2903, 103.8519),
         tier1_clue:
-          "Sail east to the equatorial choke point at the southern tip of the Malay Peninsula connecting the Indian and Pacific oceans.",
+          "Pinpoint the equatorial maritime choke point at the southern tip of the Malay Peninsula connecting the Indian and Pacific oceans.",
         tier2_clue:
           "An island city-state positioned one degree north of the Equator between the Strait of Malacca and the South China Sea.",
         tier3_clue: "Target telemetry: latitude 1.3 degrees North, longitude 103.9 degrees East."
@@ -259,7 +259,7 @@ defmodule GeoEl.Globe.WorldData do
         region: "Subantarctic South America",
         coord: Coord.new(-54.8019, -68.3030),
         tier1_clue:
-          "Conclude the expedition at the southernmost fjord harbor of the Americas facing the Drake Passage.",
+          "Locate the subantarctic fjord strait at the southernmost tip of the Americas facing the Drake Passage.",
         tier2_clue:
           "Located on the southern shore of Isla Grande de Tierra del Fuego near Cape Horn.",
         tier3_clue: "Target telemetry: latitude 54.8 degrees South, longitude 68.3 degrees West."
@@ -355,7 +355,7 @@ defmodule GeoEl.Globe.WorldData do
         region: "High Arctic Ocean",
         coord: Coord.new(78.2232, 15.6267),
         tier1_clue:
-          "Head deep into the High Arctic to a glaciated archipelago midway between northern Norway and the North Pole.",
+          "Locate the glaciated High Arctic archipelago midway between northern Norway and the North Pole.",
         tier2_clue: "Borders the Greenland and Barents seas well north of the Arctic Circle.",
         tier3_clue: "Target telemetry: latitude 78.2 degrees North, longitude 15.6 degrees East."
       },
@@ -365,7 +365,7 @@ defmodule GeoEl.Globe.WorldData do
         region: "Levantine Rift Corridor",
         coord: Coord.new(31.5590, 35.4732),
         tier1_clue:
-          "Descend to the hypersaline endorheic lake occupying the lowest exposed land elevation on Earth.",
+          "Identify the hypersaline endorheic lake occupying the lowest exposed land elevation on Earth.",
         tier2_clue: "Positioned in the Jordan Rift Valley east of the Mediterranean coast.",
         tier3_clue: "Target telemetry: latitude 31.6 degrees North, longitude 35.5 degrees East."
       },
@@ -396,7 +396,7 @@ defmodule GeoEl.Globe.WorldData do
         region: "Southern African Margin",
         coord: Coord.new(-34.3568, 18.4740),
         tier1_clue:
-          "Round the rocky headland near the southwestern extremity of the African continent where Atlantic swells meet warm currents.",
+          "Locate the rocky headland near the southwestern extremity of the African continent where Atlantic swells meet warm currents.",
         tier2_clue: "Forms the southern tip of the Cape Peninsula in South Africa.",
         tier3_clue: "Target telemetry: latitude 34.4 degrees South, longitude 18.5 degrees East."
       },
@@ -406,7 +406,7 @@ defmodule GeoEl.Globe.WorldData do
         region: "Subarctic Pacific Gateway",
         coord: Coord.new(65.7783, -168.9519),
         tier1_clue:
-          "Navigate to the shallow high-latitude strait separating the easternmost cape of Asia from the westernmost point of North America.",
+          "Pinpoint the shallow high-latitude strait separating the easternmost cape of Asia from the westernmost point of North America.",
         tier2_clue:
           "Connects the Bering Sea with the Chukchi Sea along the International Date Line.",
         tier3_clue: "Target telemetry: latitude 65.8 degrees North, longitude 169.0 degrees West."
@@ -417,7 +417,7 @@ defmodule GeoEl.Globe.WorldData do
         region: "Western Indian Ocean",
         coord: Coord.new(-18.6667, 44.7500),
         tier1_clue:
-          "Cross the Mozambique Channel to the karst limestone pinnacles on the fourth-largest island in the world.",
+          "Locate the karst limestone pinnacles on the fourth-largest island in the world across the Mozambique Channel.",
         tier2_clue: "Located near the western coast of Madagascar in the Indian Ocean.",
         tier3_clue: "Target telemetry: latitude 18.7 degrees South, longitude 44.8 degrees East."
       },
@@ -447,7 +447,7 @@ defmodule GeoEl.Globe.WorldData do
         region: "Southern Alps, New Zealand",
         coord: Coord.new(-44.6414, 167.8974),
         tier1_clue:
-          "Sail into the glacially carved fjord on the southwestern coast of a temperate South Pacific archipelago.",
+          "Pinpoint the glacially carved fjord on the southwestern coast of a temperate South Pacific archipelago.",
         tier2_clue:
           "Located on the west coast of New Zealand's South Island facing the Tasman Sea.",
         tier3_clue: "Target telemetry: latitude 44.6 degrees South, longitude 167.9 degrees East."

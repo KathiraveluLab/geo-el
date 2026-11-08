@@ -4,6 +4,7 @@ defmodule GeoEl.Adventure.SessionServerTest do
   alias GeoEl.Adventure.BISE
   alias GeoEl.Adventure.ScoreStore
   alias GeoEl.Adventure.SessionServer
+  alias GeoEl.Globe.WorldData
 
   describe "supervised SessionServer lifecycle and state transitions" do
     test "isolates session state, clamps rotation deltas, and records waypoint guesses" do
@@ -45,6 +46,10 @@ defmodule GeoEl.Adventure.SessionServerTest do
       assert MapSet.size(initial_ids) == 6
       assert MapSet.size(reset_ids) == 6
       assert MapSet.disjoint?(initial_ids, reset_ids)
+
+      Enum.each(WorldData.waypoints(), fn wp ->
+        refute wp.tier1_clue =~ ~r/\b(Begin|Conclude|First|Final)\b/i
+      end)
 
       ref = Process.monitor(pid)
       GenServer.stop(pid, :normal)
