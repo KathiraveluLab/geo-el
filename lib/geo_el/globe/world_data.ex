@@ -252,4 +252,3 @@ defmodule GeoEl.Globe.WorldData do
     Enum.map(pairs, fn {lat, lon} -> Coord.new(lat, lon) end)
   end
 end
-

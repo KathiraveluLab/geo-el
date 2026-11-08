@@ -28,4 +28,3 @@ defmodule GeoEl.Application do
     :ok
   end
 end
-

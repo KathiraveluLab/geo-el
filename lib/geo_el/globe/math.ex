@@ -117,4 +117,3 @@ defmodule GeoEl.Globe.Math do
   defp clamp_unit(value) when value < -1.0, do: -1.0
   defp clamp_unit(value), do: value
 end
-

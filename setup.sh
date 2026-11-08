@@ -39,5 +39,8 @@ mix local.rebar --force
 echo "[geo-el] Fetching project dependencies via mix setup..."
 mix setup
 
-echo "[geo-el] Setup completed. Run 'mix precommit' to verify or 'mix phx.server' to start the application."
+echo "[geo-el] Running mix precommit verification..."
+mix precommit
+
+echo "[geo-el] Setup and verification completed. Run 'mix phx.server' to start the application."
 

@@ -8,4 +8,3 @@ config :geo_el, GeoElWeb.Endpoint,
 config :logger, level: :warning
 
 config :phoenix, :plug_init_mode, :runtime
-

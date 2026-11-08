@@ -77,4 +77,3 @@ defmodule GeoEl.Adventure.BISE do
   defp clamp_delta(val, limit) when val < -limit, do: -limit
   defp clamp_delta(val, _limit), do: val
 end
-

@@ -41,4 +41,3 @@ defmodule GeoEl.Adventure.SessionServerTest do
     end
   end
 end
-

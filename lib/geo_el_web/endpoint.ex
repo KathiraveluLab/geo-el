@@ -37,4 +37,3 @@ defmodule GeoElWeb.Endpoint do
   plug Plug.Session, @session_options
   plug GeoElWeb.Router
 end
-

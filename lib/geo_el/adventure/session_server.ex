@@ -243,4 +243,3 @@ defmodule GeoEl.Adventure.SessionServer do
     end
   end
 end
-

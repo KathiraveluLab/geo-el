@@ -43,4 +43,3 @@ defmodule GeoEl.Globe.ProjectionTest do
     end
   end
 end
-

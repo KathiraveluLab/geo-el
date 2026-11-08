@@ -33,4 +33,3 @@ defmodule GeoEl.Adventure.CalibrationTest do
     end
   end
 end
-

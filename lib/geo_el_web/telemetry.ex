@@ -10,9 +10,7 @@ defmodule GeoElWeb.Telemetry do
 
   @impl true
   def init(_arg) do
-    children = [
-      {:telemetry_poller, measurements: periodic_measurements(), period: 10_000}
-    ]
+    children = []
 
     Supervisor.init(children, strategy: :one_for_one)
   end
@@ -31,9 +29,4 @@ defmodule GeoElWeb.Telemetry do
       )
     ]
   end
-
-  defp periodic_measurements do
-    []
-  end
 end
-

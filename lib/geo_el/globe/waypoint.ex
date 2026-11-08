@@ -18,4 +18,3 @@ defmodule GeoEl.Globe.Waypoint do
           tier3_clue: String.t()
         }
 end
-

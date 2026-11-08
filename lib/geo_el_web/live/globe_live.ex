@@ -385,7 +385,10 @@ defmodule GeoElWeb.GlobeLive do
                 </div>
               </div>
             <% else %>
-              <div id="expedition-complete-banner" class="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-4">
+              <div
+                id="expedition-complete-banner"
+                class="mt-4 rounded-lg border border-blue-200 bg-blue-50 p-4"
+              >
                 <h3 class="text-sm font-bold text-blue-950">
                   Expedition {if(@session_state.status == :completed, do: "Completed", else: "Halted")}
                 </h3>
@@ -405,7 +408,12 @@ defmodule GeoElWeb.GlobeLive do
             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800 mb-3">
               Direct Coordinate Navigation (BISE Validated)
             </h3>
-            <.form for={@coord_form} id="waypoint-guess-form" phx-submit="submit_guess" class="space-y-3">
+            <.form
+              for={@coord_form}
+              id="waypoint-guess-form"
+              phx-submit="submit_guess"
+              class="space-y-3"
+            >
               <div class="grid grid-cols-2 gap-3">
                 <.input
                   field={@coord_form[:lat]}
@@ -426,16 +434,24 @@ defmodule GeoElWeb.GlobeLive do
             </.form>
           </div>
 
-          <div id="calibration-telemetry-card" class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs">
+          <div
+            id="calibration-telemetry-card"
+            class="rounded-xl border border-slate-200 bg-white p-5 shadow-xs"
+          >
             <h3 class="text-xs font-bold uppercase tracking-wider text-slate-800">
               SkewPNN and A2 Calibration Telemetry
             </h3>
             <div class="mt-2 grid grid-cols-2 gap-2 text-xs text-slate-700">
               <div>
-                Empirical Skewness: <span id="telemetry-gamma" class="font-mono font-semibold text-slate-900">{@session_state.skewness_gamma}</span>
+                Empirical Skewness:
+                <span id="telemetry-gamma" class="font-mono font-semibold text-slate-900">{@session_state.skewness_gamma}</span>
               </div>
               <div>
-                95% CI Mean: <span id="telemetry-ci-mean" class="font-mono font-semibold text-slate-900">{elem(@ci_95, 0)}</span>
+                95% CI Mean:
+                <span id="telemetry-ci-mean" class="font-mono font-semibold text-slate-900">{elem(
+                  @ci_95,
+                  0
+                )}</span>
               </div>
               <div class="col-span-2">
                 95% Confidence Bounds:
@@ -549,4 +565,3 @@ defmodule GeoElWeb.GlobeLive do
     "exp-" <> Integer.to_string(:erlang.unique_integer([:positive]))
   end
 end
-

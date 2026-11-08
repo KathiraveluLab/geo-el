@@ -16,13 +16,21 @@ Instead of installing Erlang/OTP, Elixir, Hex, Rebar, and Mix dependencies manua
 
 ### Windows (`setup.bat`)
 
-Run the Windows batch script from Command Prompt or PowerShell (run as Administrator if Erlang/OTP and Elixir are not yet installed):
+Run the Windows batch script from Command Prompt or PowerShell:
 
 ```powershell
 .\setup.bat
 ```
 
-The `setup.bat` script checks for Erlang/OTP and Elixir, installs missing runtimes via `winget` (with fallback to Chocolatey), updates the current session `PATH`, initializes `Hex` and `Rebar`, and executes `mix setup`.
+The `setup.bat` script checks for Erlang/OTP and Elixir, installs missing runtimes via `winget`, persists the `bin` directories to your Windows User `PATH`, configures the PowerShell execution policy, initializes `Hex` and `Rebar`, and executes both `mix setup` and `mix precommit`.
+
+Because `.bat` files execute in a child `cmd.exe` process, an already-open PowerShell window will not reload its in-memory `$env:Path` until you either open a new terminal tab or refresh `$env:Path` in the current PowerShell session:
+
+```powershell
+$env:Path = "C:\Program Files\Erlang OTP\bin;C:\Program Files\Elixir\bin;" + $env:Path
+mix.bat precommit
+mix.bat phx.server
+```
 
 ### Linux (`setup.sh`)
 

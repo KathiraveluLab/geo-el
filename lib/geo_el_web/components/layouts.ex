@@ -5,6 +5,26 @@ defmodule GeoElWeb.Layouts do
 
   use GeoElWeb, :html
 
+  def root(assigns) do
+    ~H"""
+    <!DOCTYPE html>
+    <html lang="en" class="bg-white text-slate-900">
+      <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <meta name="csrf-token" content={get_csrf_token()} />
+        <title>Geo-El Spherical Adventure</title>
+        <link phx-track-static rel="stylesheet" href={~p"/assets/app.css"} />
+        <script defer phx-track-static type="text/javascript" src={~p"/assets/app.js"}>
+        </script>
+      </head>
+      <body class="bg-white text-slate-900 antialiased">
+        {@inner_content}
+      </body>
+    </html>
+    """
+  end
+
   attr :flash, :map, required: true
   attr :current_scope, :map, default: nil
   slot :inner_block, required: true
@@ -60,4 +80,3 @@ defmodule GeoElWeb.Layouts do
     """
   end
 end
-

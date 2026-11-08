@@ -1,64 +1,45 @@
 @echo off
-setlocal EnableDelayedExpansion
+setlocal
 
 echo [geo-el] Checking Windows prerequisites (Erlang/OTP and Elixir)...
 
 where erl >nul 2>nul
 if %ERRORLEVEL% neq 0 (
-    echo [geo-el] Erlang/OTP not found on PATH. Installing via winget...
-    winget install --id=Erlang.ErlangOTP -e --accept-package-agreements --accept-source-agreements
-    if !ERRORLEVEL! neq 0 (
-        where choco >nul 2>nul
-        if !ERRORLEVEL! equ 0 (
-            choco install erlang -y
-        ) else (
-            echo [geo-el] ERROR: Failed to install Erlang/OTP automatically. Please run in an Administrator terminal.
-            exit /b 1
-        )
+    if not exist "C:\Program Files\Erlang OTP\bin\erl.exe" (
+        echo [geo-el] Installing Erlang/OTP via winget...
+        winget install --id=Erlang.ErlangOTP -e --accept-package-agreements --accept-source-agreements
     )
-) else (
-    echo [geo-el] Erlang/OTP is already available.
 )
 
 where mix >nul 2>nul
 if %ERRORLEVEL% neq 0 (
-    echo [geo-el] Elixir not found on PATH. Installing via winget...
-    winget install --id=Elixir.Elixir -e --accept-package-agreements --accept-source-agreements
-    if !ERRORLEVEL! neq 0 (
-        where choco >nul 2>nul
-        if !ERRORLEVEL! equ 0 (
-            choco install elixir -y
-        ) else (
-            echo [geo-el] ERROR: Failed to install Elixir automatically. Please run in an Administrator terminal.
-            exit /b 1
-        )
+    if not exist "C:\Program Files\Elixir\bin\mix.bat" (
+        echo [geo-el] Installing Elixir via winget...
+        winget install --id=Elixir.Elixir -e --accept-package-agreements --accept-source-agreements
     )
-) else (
-    echo [geo-el] Elixir is already available.
 )
 
-echo [geo-el] Refreshing session PATH for Erlang and Elixir...
-for /f "usebackq delims=" %%I in (`powershell -NoProfile -Command "$m = [System.Environment]::GetEnvironmentVariable('Path','Machine'); $u = [System.Environment]::GetEnvironmentVariable('Path','User'); $extra = @(); Get-ChildItem -Path 'C:\Program Files' -Filter 'erl*' -Directory -ErrorAction SilentlyContinue | ForEach-Object { if (Test-Path (Join-Path $_.FullName 'bin')) { $extra += (Join-Path $_.FullName 'bin') } }; Get-ChildItem -Path 'C:\Program Files', 'C:\Program Files (x86)' -Filter 'Elixir*' -Directory -ErrorAction SilentlyContinue | ForEach-Object { if (Test-Path (Join-Path $_.FullName 'bin')) { $extra += (Join-Path $_.FullName 'bin') } }; ($m + ';' + $u + ';' + ($extra -join ';'))"`) do (
-    set "PATH=%%I"
-)
+echo [geo-el] Configuring User PATH and PowerShell ExecutionPolicy...
+powershell -NoProfile -Command "$ErrorActionPreference = 'SilentlyContinue'; Set-ExecutionPolicy -ExecutionPolicy RemoteSigned -Scope CurrentUser -Force; $u = [System.Environment]::GetEnvironmentVariable('Path','User'); $dirs = @('C:\Program Files\Erlang OTP\bin', 'C:\Program Files\Elixir\bin'); foreach ($d in $dirs) { if ((Test-Path $d) -and ($u -notlike \"*$d*\")) { $u = \"$u;$d\" } }; [System.Environment]::SetEnvironmentVariable('Path', $u, 'User')"
 
-where mix >nul 2>nul
-if %ERRORLEVEL% neq 0 (
-    echo [geo-el] ERROR: mix command is still not reachable on PATH. Please open a new terminal window and re-run setup.bat.
-    exit /b 1
-)
+set "PATH=C:\Program Files\Erlang OTP\bin;C:\Program Files\Elixir\bin;%PATH%"
 
 echo [geo-el] Initializing Hex and Rebar package managers...
-call mix local.hex --force
+call "C:\Program Files\Elixir\bin\mix.bat" local.hex --force
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-call mix local.rebar --force
+call "C:\Program Files\Elixir\bin\mix.bat" local.rebar --force
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-echo [geo-el] Fetching project dependencies via mix setup...
-call mix setup
+echo [geo-el] Running mix setup...
+call "C:\Program Files\Elixir\bin\mix.bat" setup
 if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
 
-echo [geo-el] Setup completed. Run 'mix precommit' to verify or 'mix phx.server' to start the application.
+echo [geo-el] Running mix precommit verification...
+call "C:\Program Files\Elixir\bin\mix.bat" precommit
+if %ERRORLEVEL% neq 0 exit /b %ERRORLEVEL%
+
+echo [geo-el] Setup and verification completed.
+echo [geo-el] NOTE: If running inside an existing PowerShell window, refresh your session PATH with:
+echo [geo-el]   $env:Path = "C:\Program Files\Erlang OTP\bin;C:\Program Files\Elixir\bin;" + $env:Path
 endlocal
-

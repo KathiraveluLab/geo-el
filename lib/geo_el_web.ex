@@ -87,4 +87,3 @@ defmodule GeoElWeb do
     apply(__MODULE__, which, [])
   end
 end
-

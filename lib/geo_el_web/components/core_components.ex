@@ -44,7 +44,9 @@ defmodule GeoElWeb.CoreComponents do
   attr :field, Phoenix.HTML.FormField, doc: "a form field struct retrieved from the form"
   attr :errors, :list, default: []
   attr :class, :string, default: nil
-  attr :rest, :global, include: ~w(autocomplete disabled max min pattern placeholder readonly required step)
+
+  attr :rest, :global,
+    include: ~w(autocomplete disabled max min pattern placeholder readonly required step)
 
   def input(%{field: %Phoenix.HTML.FormField{} = field} = assigns) do
     assigns
@@ -87,4 +89,3 @@ defmodule GeoElWeb.CoreComponents do
     end)
   end
 end
-

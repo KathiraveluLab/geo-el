@@ -50,4 +50,3 @@ defmodule GeoEl.Globe.MathTest do
     end
   end
 end
-

@@ -34,4 +34,3 @@ defmodule GeoElWeb.GlobeLiveTest do
     end
   end
 end
-

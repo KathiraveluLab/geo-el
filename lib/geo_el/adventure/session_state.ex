@@ -67,4 +67,3 @@ defmodule GeoEl.Adventure.SessionState do
           status: :in_progress | :completed | :out_of_fuel
         }
 end
-

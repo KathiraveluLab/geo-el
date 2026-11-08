@@ -13,7 +13,8 @@ defmodule GeoEl.Globe.Projection do
   """
   @spec forward(Coord.t(), Coord.t(), number()) ::
           {:ok, {float(), float(), float()}} | :occluded
-  def forward(%Coord{} = point, %Coord{} = camera, radius) when is_number(radius) and radius > 0 do
+  def forward(%Coord{} = point, %Coord{} = camera, radius)
+      when is_number(radius) and radius > 0 do
     cos_c = Math.cos_central_angle(point, camera)
 
     if cos_c < 0.0 do
@@ -59,9 +60,7 @@ defmodule GeoEl.Globe.Projection do
       lambda0 = Math.deg_to_rad(camera.lon)
 
       sin_phi =
-        BISE.clamp_trig_domain(
-          cos_c * :math.sin(phi0) + -fy * sin_c * :math.cos(phi0) / rho
-        )
+        BISE.clamp_trig_domain(cos_c * :math.sin(phi0) + -fy * sin_c * :math.cos(phi0) / rho)
 
       phi = :math.asin(sin_phi)
 
@@ -88,7 +87,7 @@ defmodule GeoEl.Globe.Projection do
       Enum.reduce(coords, {[], []}, fn coord, {acc_segments, active_run} ->
         case forward(coord, camera, radius) do
           {:ok, {x, y, _cos_c}} ->
-            point_str = "#{ Float.round(cx + x, 2) },#{ Float.round(cy + y, 2) }"
+            point_str = "#{Float.round(cx + x, 2)},#{Float.round(cy + y, 2)}"
             {acc_segments, [point_str | active_run]}
 
           :occluded ->
@@ -144,4 +143,3 @@ defmodule GeoEl.Globe.Projection do
     |> Enum.reject(&(&1 == ""))
   end
 end
-

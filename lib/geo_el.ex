@@ -34,4 +34,3 @@ defmodule GeoEl do
     SessionServer.get_state(pid)
   end
 end
-

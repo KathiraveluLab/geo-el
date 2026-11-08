@@ -38,4 +38,3 @@ defmodule GeoEl.Globe.Coord do
     adjusted - 180.0
   end
 end
-

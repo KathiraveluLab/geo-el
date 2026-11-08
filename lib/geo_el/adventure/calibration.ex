@@ -105,4 +105,3 @@ defmodule GeoEl.Adventure.Calibration do
   defp clamp_score(val) when val < 0.0, do: 0.0
   defp clamp_score(val), do: val * 1.0
 end
-
