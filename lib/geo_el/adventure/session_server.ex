@@ -158,7 +158,7 @@ defmodule GeoEl.Adventure.SessionServer do
       player_name: nil,
       camera: Coord.new(20.0, 0.0),
       radius: radius,
-      waypoints: WorldData.sample_expedition_waypoints(6, exclude_ids),
+      waypoints: WorldData.sample_expedition_waypoints(WorldData.expedition_size(), exclude_ids),
       current_index: 0,
       clue_tier: 1,
       fuel: @initial_fuel,

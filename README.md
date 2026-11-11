@@ -8,7 +8,7 @@ This is a geography game written in Elixir using Phoenix LiveView and Open Telec
 
 ### Objective
 
-Each expedition draws a randomized sequence of 6 unique waypoints without replacement from a global catalog of 24 landmarks spanning all continents and latitude bands (such as `Royal Observatory Greenwich`, `Mitad del Mundo in Quito`, `Mount Kilimanjaro`, `Lake Baikal`, `Uluru Monolith`, `Spitsbergen Fjord in Svalbard`, `Strait of Hormuz`, and `Milford Sound in Fiordland`). Starting a new expedition excludes the previous run's waypoints first so consecutive runs do not repeat questions. For each stage, read the geographic clue, rotate the 3D orthographic globe to locate the target region, and pinpoint the waypoint before your expedition fuel (`100%`) runs out.
+Each expedition draws a randomized sequence of unique waypoints without replacement (default `6`, configurable via `expedition_size` in `priv/data/questions.yaml`) from the YAML question bank stored in [`priv/data/questions.yaml`](priv/data/questions.yaml). The default catalog includes 24 landmarks spanning all continents and latitude bands (such as `Royal Observatory Greenwich`, `Mitad del Mundo in Quito`, `Mount Kilimanjaro`, `Lake Baikal`, `Uluru Monolith`, `Spitsbergen Fjord in Svalbard`, `Strait of Hormuz`, and `Milford Sound in Fiordland`). Starting a new expedition excludes the previous run's waypoints first so consecutive runs do not repeat questions. For each stage, read the geographic clue, rotate the 3D orthographic globe to locate the target region, and pinpoint the waypoint before your expedition fuel (`100%`) runs out.
 
 ### Step-by-Step Gameplay
 
@@ -43,9 +43,64 @@ Each expedition draws a randomized sequence of 6 unique waypoints without replac
    - Your name, score, completed waypoints, remaining fuel, and UTC timestamp are saved persistently to disk (`priv/data/leaderboard.json`) via `GeoEl.Adventure.ScoreStore` and displayed in the **Previous Scores (Persistent Storage)** leaderboard across sessions and server restarts.
 
 6. **Complete or Reset the Expedition:**
-   - The expedition ends when all 6 waypoints are completed or if fuel reaches `0%`. Click **Reset Expedition** (or **Start New Expedition**) at any time to start a fresh run.
+   - The expedition ends when all stages are completed or if fuel reaches `0%`. Click **Reset Expedition** (or **Start New Expedition**) at any time to start a fresh run.
+
+## Managing Questions and Answers (`priv/data/questions.yaml`)
+
+All questions (clues) and answers (target landmark names and latitude/longitude coordinates) are loaded dynamically from [`priv/data/questions.yaml`](priv/data/questions.yaml) rather than hardcoded in Elixir source files. A teacher or instructor can add, edit, or remove questions using any plain-text editor (Notepad, TextEdit, VS Code).
+
+### Step-by-Step Guide for Teachers
+
+1. Open `priv/data/questions.yaml`.
+2. Add a new entry under the `questions:` list (indent with 2 spaces; do not use Tab characters):
+
+```yaml
+questions:
+  # Optional setting near the top of the file: number of questions drawn per round
+  # expedition_size: 6
+
+  - id: wp-grand-canyon
+    name: "Grand Canyon, Arizona"
+    region: "Colorado Plateau, North America"
+    lat: 36.1069
+    lon: -112.1129
+    tier1_clue: "Locate the steep-sided river gorge carved across a high arid plateau in southwestern North America."
+    tier2_clue: "Formed by the Colorado River in northern Arizona."
+    tier3_clue: "Target telemetry: latitude 36.1 degrees North, longitude 112.1 degrees West."
+```
+
+3. **Field Reference:**
+
+| Field | Required | Description |
+| :--- | :--- | :--- |
+| `name` | Yes | Correct answer / landmark name shown in turn feedback and the expedition log (`answer` is also accepted). |
+| `lat` | Yes | Target latitude in decimal degrees from `-90.0` (South Pole) to `90.0` (North Pole). Use negative numbers for South. |
+| `lon` | Yes | Target longitude in decimal degrees from `-180.0` (West) to `180.0` (East). Use negative numbers for West. |
+| `tier1_clue` | Yes | Primary question shown immediately at the start of the turn (`question` is also accepted). |
+| `region` | No | Geographic region label. Defaults to `"Global Landmark"` if omitted. |
+| `tier2_clue` | No | Hint unlocked for `4%` fuel (`0.85x` points). Auto-generated from `region` if omitted. |
+| `tier3_clue` | No | Coordinate hint unlocked for `4%` fuel (`0.70x` points). Auto-generated from `lat` and `lon` if omitted. |
+| `id` | No | Unique short identifier such as `wp-grand-canyon`. Auto-generated from `name` if omitted. |
+
+4. **Minimal Entry Example:**
+   If you want to add classroom quiz questions quickly, only `name`, `lat`, `lon`, and `tier1_clue` are required:
+
+```yaml
+  - name: "Taj Mahal, Agra"
+    lat: 27.1751
+    lon: 78.0421
+    tier1_clue: "Identify the white marble mausoleum standing along the southern bank of the Yamuna River."
+```
+
+5. **Applying and Validating Changes:**
+   - **Live Auto-Reload:** If the game server is already running, saving `priv/data/questions.yaml` automatically reloads the question bank when any student clicks **Reset Expedition** or opens a new browser session.
+   - **Custom Round Length:** Change `expedition_size: 6` at the top of `priv/data/questions.yaml` if you want shorter or longer rounds (automatically capped at the total number of questions in the file).
+   - **Formatting Tip:** Wrap clues containing `#` characters in double quotes `"..."`, and always use spaces instead of Tabs for indentation.
+   - **Validation Check:** Run `mix test` (or `mix precommit`) after editing to verify YAML syntax, unique IDs, and BISE coordinate bounds (`lat` in `[-90, 90]`, `lon` in `[-180, 180]`).
 
 ## Architecture Overview
+
+- **YAML Question Bank & Constant Cache (`GeoEl.Globe.YamlParser` and `GeoEl.Globe.WorldData`):** Parses teacher-editable questions and coordinates from [`priv/data/questions.yaml`](priv/data/questions.yaml), enforces BISE coordinate and ID validation, hot-reloads on file modification, and caches the validated catalog in Erlang `:persistent_term`.
 
 - **Orthographic Spherical Projection (`GeoEl.Globe.Projection` and `GeoEl.Globe.Math`):** Performs server-side forward and inverse orthographic projections between spherical Earth coordinates $(\phi, \lambda)$ and two-dimensional Scalable Vector Graphics (SVG) viewport coordinates $(x, y)$, alongside Haversine great-circle distance and geodesic arc interpolation.
 - **Bounded Input State Enforcement (`GeoEl.Adventure.BISE`):** Enforces radial domain clamping ($\hat{u} \in [0.0, 1.0]$) during inverse trigonometric projection, sanitizes viewport rotation deltas and player identity strings, and verifies closed cartographic polygon rings at startup.

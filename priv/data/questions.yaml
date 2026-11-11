@@ -1,0 +1,247 @@
+# Geo-El Teacher Question & Answer Bank
+# ======================================
+# Teachers can add, edit, or remove geography questions directly in this YAML file.
+#
+# Optional top-level setting:
+#   expedition_size: 6       # Number of random questions drawn per round (default: 6)
+#
+# Fields for each item under `questions:`:
+#   - name:       Correct answer / place name shown to the student after guessing (Required)
+#   - lat:        Target latitude in decimal degrees, from -90.0 to 90.0 (Required; negative = South)
+#   - lon:        Target longitude in decimal degrees, from -180.0 to 180.0 (Required; negative = West)
+#   - tier1_clue: Primary question prompt worth 1.0x points (Required)
+#   - region:     Geographic region name (Optional; defaults to "Global Landmark")
+#   - tier2_clue: Second hint unlocked at a 4% fuel cost, 0.85x multiplier (Optional; auto-generated from region if omitted)
+#   - tier3_clue: Coordinate hint unlocked at a 4% fuel cost, 0.70x multiplier (Optional; auto-generated from lat/lon if omitted)
+#   - id:         Unique short slug (Optional; auto-generated from name if omitted)
+#
+# Example entry to copy and customize:
+#
+#   - id: wp-grand-canyon
+#     name: "Grand Canyon, Arizona"
+#     region: "Colorado Plateau, North America"
+#     lat: 36.1069
+#     lon: -112.1129
+#     tier1_clue: "Locate the steep-sided river gorge carved across a high arid plateau in southwestern North America."
+#     tier2_clue: "Formed by the Colorado River in northern Arizona."
+#     tier3_clue: "Target telemetry: latitude 36.1 degrees North, longitude 112.1 degrees West."
+
+expedition_size: 6
+
+questions:
+  - id: wp-greenwich
+    name: "Royal Observatory Greenwich"
+    region: "Western Europe"
+    lat: 51.4769
+    lon: 0.0005
+    tier1_clue: "Locate the historic astronomical observatory where the Prime Meridian divides the Eastern and Western hemispheres along a tidal river."
+    tier2_clue: "Located in southeastern Great Britain on the southern bank of the River Thames."
+    tier3_clue: "Target telemetry: latitude 51.5 degrees North, longitude 0.0 degrees."
+
+  - id: wp-quito
+    name: "Mitad del Mundo, Quito"
+    region: "Andean South America"
+    lat: -0.0022
+    lon: -78.4558
+    tier1_clue: "Plot a course to the high-altitude volcanic basin where the Equator crosses the spine of the Andes."
+    tier2_clue: "This capital basin sits at 2,850 meters elevation near the Pichincha stratovolcano in northwestern South America."
+    tier3_clue: "Target telemetry: latitude 0.0 degrees, longitude 78.5 degrees West."
+
+  - id: wp-reykjavik
+    name: "Mid-Atlantic Rift, Thingvellir"
+    region: "Subarctic North Atlantic"
+    lat: 64.2559
+    lon: -21.1295
+    tier1_clue: "Locate the subarctic volcanic island where the North American and Eurasian tectonic plates pull apart above sea level."
+    tier2_clue: "Situated just south of the Arctic Circle in southwestern Iceland along a geothermal rift valley."
+    tier3_clue: "Target telemetry: latitude 64.3 degrees North, longitude 21.1 degrees West."
+
+  - id: wp-suez
+    name: "Isthmus of Suez"
+    region: "Northeast Africa and Sinai"
+    lat: 30.5852
+    lon: 32.2654
+    tier1_clue: "Identify the narrow land bridge and artificial maritime corridor linking the Mediterranean Sea with the Red Sea."
+    tier2_clue: "Separates the African continent from the Sinai Peninsula along a sea-level canal."
+    tier3_clue: "Target telemetry: latitude 30.6 degrees North, longitude 32.3 degrees East."
+
+  - id: wp-singapore
+    name: "Strait of Singapore"
+    region: "Maritime Southeast Asia"
+    lat: 1.2903
+    lon: 103.8519
+    tier1_clue: "Pinpoint the equatorial maritime choke point at the southern tip of the Malay Peninsula connecting the Indian and Pacific oceans."
+    tier2_clue: "An island city-state positioned one degree north of the Equator between the Strait of Malacca and the South China Sea."
+    tier3_clue: "Target telemetry: latitude 1.3 degrees North, longitude 103.9 degrees East."
+
+  - id: wp-ushuaia
+    name: "Beagle Channel, Tierra del Fuego"
+    region: "Subantarctic South America"
+    lat: -54.8019
+    lon: -68.3030
+    tier1_clue: "Locate the subantarctic fjord strait at the southernmost tip of the Americas facing the Drake Passage."
+    tier2_clue: "Located on the southern shore of Isla Grande de Tierra del Fuego near Cape Horn."
+    tier3_clue: "Target telemetry: latitude 54.8 degrees South, longitude 68.3 degrees West."
+
+  - id: wp-gibraltar
+    name: "Strait of Gibraltar"
+    region: "Western Mediterranean Gateway"
+    lat: 35.9720
+    lon: -5.4958
+    tier1_clue: "Locate the narrow tectonic sill where Atlantic surface waters pour eastward into a nearly enclosed basin."
+    tier2_clue: "Flanked by the southern tip of the Iberian Peninsula and northern Morocco."
+    tier3_clue: "Target telemetry: latitude 36.0 degrees North, longitude 5.5 degrees West."
+
+  - id: wp-kilimanjaro
+    name: "Uhuru Peak, Mount Kilimanjaro"
+    region: "East African Rift Highlands"
+    lat: -3.0674
+    lon: 37.3556
+    tier1_clue: "Identify the freestanding dormant stratovolcano rising nearly six kilometers above equatorial savannas."
+    tier2_clue: "Positioned along the northern border of Tanzania just south of the Equator."
+    tier3_clue: "Target telemetry: latitude 3.1 degrees South, longitude 37.4 degrees East."
+
+  - id: wp-panama
+    name: "Culebra Cut, Isthmus of Panama"
+    region: "Central American Land Bridge"
+    lat: 9.0800
+    lon: -79.6800
+    tier1_clue: "Pinpoint the excavated continental divide linking the Caribbean Sea to the Gulf of Panama."
+    tier2_clue: "Cuts across the narrowest S-shaped isthmus connecting North and South America."
+    tier3_clue: "Target telemetry: latitude 9.1 degrees North, longitude 79.7 degrees West."
+
+  - id: wp-baikal
+    name: "Olkhon Island, Lake Baikal"
+    region: "Continental Siberia"
+    lat: 53.1494
+    lon: 107.3728
+    tier1_clue: "Search the interior of northern Eurasia for the world's deepest continental rift lake."
+    tier2_clue: "Crescent-shaped freshwater basin in southern Siberia north of the Mongolian steppe."
+    tier3_clue: "Target telemetry: latitude 53.1 degrees North, longitude 107.4 degrees East."
+
+  - id: wp-uluru
+    name: "Uluru Monolith, Amadeus Basin"
+    region: "Central Australian Outback"
+    lat: -25.3444
+    lon: 131.0369
+    tier1_clue: "Navigate to the isolated arkose sandstone inselberg rising from an arid red desert plain near the Tropic of Capricorn."
+    tier2_clue: "Situated in the southern Northern Territory near the centre of the Australian continent."
+    tier3_clue: "Target telemetry: latitude 25.3 degrees South, longitude 131.0 degrees East."
+
+  - id: wp-everest
+    name: "Khumbu Massif, Mount Everest"
+    region: "Central Himalayas"
+    lat: 27.9881
+    lon: 86.9250
+    tier1_clue: "Ascend to the highest continental collision crest where the Indian plate thrusts beneath the Tibetan Plateau."
+    tier2_clue: "Straddles the border between Nepal and Tibet along the Mahalangur Himal range."
+    tier3_clue: "Target telemetry: latitude 28.0 degrees North, longitude 86.9 degrees East."
+
+  - id: wp-victoria-falls
+    name: "Batoka Gorge, Victoria Falls"
+    region: "Zambezi River Basin"
+    lat: -17.9243
+    lon: 25.8572
+    tier1_clue: "Track a major southern African river where its entire width plunges into a transverse basaltic chasm."
+    tier2_clue: "Located along the Zambezi River on the border between Zambia and Zimbabwe."
+    tier3_clue: "Target telemetry: latitude 17.9 degrees South, longitude 25.9 degrees East."
+
+  - id: wp-galapagos
+    name: "Isabela Island, Galapagos"
+    region: "Eastern Equatorial Pacific"
+    lat: -0.0200
+    lon: -91.3500
+    tier1_clue: "Locate the oceanic hotspot archipelago sitting directly on the Equator west of South America."
+    tier2_clue: "Lies approximately 1,000 kilometers west of mainland Ecuador in the Pacific Ocean."
+    tier3_clue: "Target telemetry: latitude 0.0 degrees, longitude 91.4 degrees West."
+
+  - id: wp-svalbard
+    name: "Spitsbergen Fjord, Svalbard"
+    region: "High Arctic Ocean"
+    lat: 78.2232
+    lon: 15.6267
+    tier1_clue: "Locate the glaciated High Arctic archipelago midway between northern Norway and the North Pole."
+    tier2_clue: "Borders the Greenland and Barents seas well north of the Arctic Circle."
+    tier3_clue: "Target telemetry: latitude 78.2 degrees North, longitude 15.6 degrees East."
+
+  - id: wp-dead-sea
+    name: "Dead Sea Transform, Jordan Rift"
+    region: "Levantine Rift Corridor"
+    lat: 31.5590
+    lon: 35.4732
+    tier1_clue: "Identify the hypersaline endorheic lake occupying the lowest exposed land elevation on Earth."
+    tier2_clue: "Positioned in the Jordan Rift Valley east of the Mediterranean coast."
+    tier3_clue: "Target telemetry: latitude 31.6 degrees North, longitude 35.5 degrees East."
+
+  - id: wp-titicaca
+    name: "Isla del Sol, Lake Titicaca"
+    region: "Andean Altiplano"
+    lat: -15.9254
+    lon: -69.3354
+    tier1_clue: "Find the high-elevation navigable alpine lake nestled within the central Andean Altiplano."
+    tier2_clue: "Sits at 3,812 meters elevation on the border between Peru and Bolivia."
+    tier3_clue: "Target telemetry: latitude 15.9 degrees South, longitude 69.3 degrees West."
+
+  - id: wp-hormuz
+    name: "Strait of Hormuz"
+    region: "Persian Gulf Entrance"
+    lat: 26.5667
+    lon: 56.2500
+    tier1_clue: "Chart the curved maritime choke point separating the Persian Gulf from the Gulf of Oman."
+    tier2_clue: "Flanked by the Musandam Peninsula to the south and the Iranian coast to the north."
+    tier3_clue: "Target telemetry: latitude 26.6 degrees North, longitude 56.3 degrees East."
+
+  - id: wp-good-hope
+    name: "Cape of Good Hope"
+    region: "Southern African Margin"
+    lat: -34.3568
+    lon: 18.4740
+    tier1_clue: "Locate the rocky headland near the southwestern extremity of the African continent where Atlantic swells meet warm currents."
+    tier2_clue: "Forms the southern tip of the Cape Peninsula in South Africa."
+    tier3_clue: "Target telemetry: latitude 34.4 degrees South, longitude 18.5 degrees East."
+
+  - id: wp-bering
+    name: "Diomede Islands, Bering Strait"
+    region: "Subarctic Pacific Gateway"
+    lat: 65.7783
+    lon: -168.9519
+    tier1_clue: "Pinpoint the shallow high-latitude strait separating the easternmost cape of Asia from the westernmost point of North America."
+    tier2_clue: "Connects the Bering Sea with the Chukchi Sea along the International Date Line."
+    tier3_clue: "Target telemetry: latitude 65.8 degrees North, longitude 169.0 degrees West."
+
+  - id: wp-madagascar
+    name: "Tsingy de Bemaraha, Madagascar"
+    region: "Western Indian Ocean"
+    lat: -18.6667
+    lon: 44.7500
+    tier1_clue: "Locate the karst limestone pinnacles on the fourth-largest island in the world across the Mozambique Channel."
+    tier2_clue: "Located near the western coast of Madagascar in the Indian Ocean."
+    tier3_clue: "Target telemetry: latitude 18.7 degrees South, longitude 44.8 degrees East."
+
+  - id: wp-denali
+    name: "Alaska Range, Denali"
+    region: "Subarctic North America"
+    lat: 63.0692
+    lon: -151.0070
+    tier1_clue: "Locate the granite batholith summit that stands as the highest mountain peak in North America."
+    tier2_clue: "Rises above interior Alaska north of Cook Inlet."
+    tier3_clue: "Target telemetry: latitude 63.1 degrees North, longitude 151.0 degrees West."
+
+  - id: wp-atacama
+    name: "Salar de Atacama"
+    region: "Hyperarid Andean Plateau"
+    lat: -23.5000
+    lon: -68.2500
+    tier1_clue: "Identify the rain-shadowed salt flat trapped between the Pacific Coastal Range and the main cordillera of the Andes."
+    tier2_clue: "Situated in northern Chile along the Tropic of Capricorn."
+    tier3_clue: "Target telemetry: latitude 23.5 degrees South, longitude 68.3 degrees West."
+
+  - id: wp-milford
+    name: "Milford Sound, Fiordland"
+    region: "Southern Alps, New Zealand"
+    lat: -44.6414
+    lon: 167.8974
+    tier1_clue: "Pinpoint the glacially carved fjord on the southwestern coast of a temperate South Pacific archipelago."
+    tier2_clue: "Located on the west coast of New Zealand's South Island facing the Tasman Sea."
+    tier3_clue: "Target telemetry: latitude 44.6 degrees South, longitude 167.9 degrees East."
+

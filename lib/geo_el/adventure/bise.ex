@@ -96,6 +96,17 @@ defmodule GeoEl.Adventure.BISE do
 
   def valid_closed_ring?(_), do: false
 
+  @doc """
+  Verifies that latitude and longitude inputs are finite numbers within canonical Earth bounds:
+  latitude in `[-90.0, 90.0]` and longitude in `[-180.0, 180.0]`.
+  """
+  @spec valid_coord_bounds?(term(), term()) :: boolean()
+  def valid_coord_bounds?(lat, lon) when is_number(lat) and is_number(lon) do
+    lat >= -90.0 and lat <= 90.0 and lon >= -180.0 and lon <= 180.0
+  end
+
+  def valid_coord_bounds?(_, _), do: false
+
   defp clamp_delta(val, limit) when val > limit, do: limit
   defp clamp_delta(val, limit) when val < -limit, do: -limit
   defp clamp_delta(val, _limit), do: val

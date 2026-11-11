@@ -170,7 +170,7 @@ defmodule GeoElWeb.GlobeLive do
         class="mb-6 rounded-xl border border-slate-200 bg-slate-50 p-4 text-slate-900 shadow-xs"
       >
         <h2 class="text-xs font-bold uppercase tracking-wider text-slate-800">
-          How to Play (6-Waypoint Global Expedition)
+          How to Play ({length(@session_state.waypoints)}-Waypoint Global Expedition)
         </h2>
         <div class="mt-2 grid grid-cols-1 gap-3 text-xs text-slate-700 md:grid-cols-3">
           <div class="rounded-lg border border-slate-200 bg-white p-2.5">
@@ -517,7 +517,7 @@ defmodule GeoElWeb.GlobeLive do
                     <div>
                       <span class="font-bold text-slate-900">#{idx} {entry.player_name}</span>
                       <span class="text-slate-600">
-                        ({entry.waypoints_completed}/6 legs, {entry.fuel_remaining}% fuel)
+                        ({entry.waypoints_completed} legs, {entry.fuel_remaining}% fuel)
                       </span>
                     </div>
                     <span class="font-bold text-blue-900">{entry.score} pts</span>
