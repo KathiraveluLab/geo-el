@@ -20,4 +20,5 @@ priv/static/cache_manifest.json
 priv/static/assets/*.gz
 priv/static/assets/*-*.css
 priv/static/assets/*-*.js
+priv/data/leaderboard.json
 
