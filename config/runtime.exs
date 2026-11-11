@@ -5,12 +5,22 @@ if System.get_env("PHX_SERVER") do
 end
 
 if config_env() == :prod do
-  secret_key_base =
+  raw_secret =
     System.get_env("SECRET_KEY_BASE") ||
       raise """
       environment variable SECRET_KEY_BASE is missing.
       You can generate one by calling: mix phx.gen.secret
       """
+
+  # Render's generateValue produces a 256-bit (~44 char) secret, while Plug.Session
+  # requires at least 64 bytes; expand shorter secrets deterministically via SHA-512.
+  secret_key_base =
+    if byte_size(raw_secret) >= 64 do
+      raw_secret
+    else
+      :crypto.hash(:sha512, "geo_el:secret_key_base:" <> raw_secret)
+      |> Base.encode16(case: :lower)
+    end
 
   host =
     System.get_env("PHX_HOST") ||
