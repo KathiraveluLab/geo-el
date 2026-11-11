@@ -153,3 +153,21 @@ To start the Phoenix web endpoint locally (accessible at `http://localhost:4000`
 ```bash
 mix phx.server
 ```
+
+## Free Dynamic Hosting on Render (Continuous Integration and Deployment)
+
+This repository includes [`Dockerfile`](Dockerfile), [`render.yaml`](render.yaml), and a two-stage workflow in [`.github/workflows/elixir.yml`](.github/workflows/elixir.yml) to host `geo-el` dynamically on the **Render Free Tier** (`$0/month`) and redeploy automatically on every push to `main` after tests pass.
+
+### One-Time Setup on Render and GitHub
+
+1. Sign in to [Render](https://render.com) with your GitHub account.
+2. Click **New +** > **Blueprint**, connect this GitHub repository, and apply [`render.yaml`](render.yaml) (creates a free Docker web service named `geo-el`, auto-generates `SECRET_KEY_BASE`, configures `/healthz`, and binds to `RENDER_EXTERNAL_HOSTNAME`).
+3. Wait for the initial Docker release build to finish; your live application will be available at `https://geo-el.onrender.com` (or the assigned `*.onrender.com` URL shown in your Render dashboard).
+4. Open the **Settings** tab for your Render web service, scroll to **Deploy Hook**, and copy the Deploy Hook URL.
+5. In your GitHub repository, go to **Settings** > **Secrets and variables** > **Actions** > **New repository secret**, create a secret named `RENDER_DEPLOY_HOOK_URL`, and paste the Deploy Hook URL.
+
+### How Continuous Deployment Works
+
+- Every push or pull request targeting `main` runs `mix precommit` (`mix format --check-formatted`, `mix compile --warnings-as-errors`, and `mix test`).
+- When a push to `main` passes all CI checks, the `Deploy to Render` job sends a `POST` request to `RENDER_DEPLOY_HOOK_URL`, rebuilding and deploying your updated game (including any question edits in `priv/data/questions.yaml`).
+- Note that Render free web services spin down after `15` minutes of inactivity (taking roughly `30` to `60` seconds to wake on the next visit) and use an ephemeral container disk (runtime edits to `priv/data/leaderboard.json` reset to the committed Git snapshot upon spin-down or redeploy).

@@ -11,7 +11,6 @@ permissions:
 
 jobs:
   build:
-
     name: Build and test
     runs-on: ubuntu-22.04
 
@@ -34,3 +33,27 @@ jobs:
       run: mix deps.get
     - name: Run tests
       run: mix precommit
+
+  deploy:
+    name: Deploy to Render
+    needs: build
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-22.04
+    env:
+      RENDER_DEPLOY_HOOK_URL: ${{ secrets.RENDER_DEPLOY_HOOK_URL }}
+
+    steps:
+    - name: Trigger Render Deploy Hook
+      run: |
+        if [ -z "$RENDER_DEPLOY_HOOK_URL" ]; then
+          echo "RENDER_DEPLOY_HOOK_URL secret is not configured yet; skipping Render deploy trigger."
+          exit 0
+        fi
+
+        response=$(curl -s -o /dev/null -w "%{http_code}" -X POST "$RENDER_DEPLOY_HOOK_URL")
+        if [ "$response" -eq 200 ] || [ "$response" -eq 201 ]; then
+          echo "Triggered Render deployment cleanly (HTTP $response)."
+        else
+          echo "Failed to trigger Render deployment. HTTP status code: $response"
+          exit 1
+        fi

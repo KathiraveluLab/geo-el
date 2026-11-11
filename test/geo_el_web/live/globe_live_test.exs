@@ -54,5 +54,13 @@ defmodule GeoElWeb.GlobeLiveTest do
       assert get(conn, "/assets/vendor/phoenix.min.js").status == 200
       assert get(conn, "/assets/vendor/phoenix_live_view.min.js").status == 200
     end
+
+    test "responds HTTP 200 JSON from /healthz readiness endpoint", %{conn: conn} do
+      conn = get(conn, "/healthz")
+      assert conn.status == 200
+      body = Jason.decode!(conn.resp_body)
+      assert body["status"] == "ok"
+      assert is_integer(body["waypoints"]) and body["waypoints"] > 0
+    end
   end
 end

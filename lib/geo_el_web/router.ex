@@ -11,6 +11,10 @@ defmodule GeoElWeb.Router do
   end
 
   scope "/", GeoElWeb do
+    get "/healthz", HealthController, :show
+  end
+
+  scope "/", GeoElWeb do
     pipe_through :browser
 
     live "/", GlobeLive, :index

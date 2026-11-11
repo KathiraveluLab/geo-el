@@ -1,0 +1,20 @@
+services:
+  - type: web
+    name: geo-el
+    runtime: docker
+    plan: free
+    region: oregon
+    dockerfilePath: ./Dockerfile
+    dockerContext: .
+    healthCheckPath: /healthz
+    autoDeploy: false
+    envVars:
+      - key: MIX_ENV
+        value: prod
+      - key: PHX_SERVER
+        value: "true"
+      - key: RELEASE_DISTRIBUTION
+        value: none
+      - key: SECRET_KEY_BASE
+        generateValue: true
+
